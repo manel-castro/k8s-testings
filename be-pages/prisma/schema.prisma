@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model HeroSection {
+model section {
   id      Int     @id @default(autoincrement())
   data    Json
   section Section @unique

@@ -1,11 +1,22 @@
+import { useLocale } from "next-intl";
 import { HeroSection } from "./HeroSection";
 import { getHeroSectionData } from "./getHeroSectionData";
 
 export default async function Hero() {
-  const heroDataPromise = getHeroSectionData();
-  const heroData = await heroDataPromise;
+  //eslint-disable-next-line
+  const locale = useLocale();
+  const heroData = await getHeroSectionData(locale);
 
-  console.log("heroData:", heroData);
+  const { Title, Description, Video } = heroData.data.attributes;
+  const videoSrc = "http://localhost:1337" + Video.data.attributes.url;
 
-  return <HeroSection {...heroData} />;
+  return (
+    <>
+      <HeroSection
+        title={Title}
+        description={Description}
+        videoSrc={videoSrc}
+      />
+    </>
+  );
 }

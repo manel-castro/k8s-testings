@@ -1,11 +1,18 @@
 "use server";
 
 import axios from "axios";
+import i18next from "i18next";
+import nextIntl, { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
-export const getHeroSectionData = () => {
-  const heroData = axios
-    .get(process.env.NEXT_PUBLIC_BE_PAGES_HOST + "/pages/HERO")
-    .then((data) => data.data[0].data);
+export const getHeroSectionData = async (locale: string) => {
+  const heroData = (
+    await axios.get(
+      `http://localhost:1337/api/hero?locale=${locale}&populate=*`
+    )
+  ).data;
+
+  console.log(heroData);
 
   return heroData;
 };

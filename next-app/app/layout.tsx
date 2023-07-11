@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Montserrat, Open_Sans } from "next/font/google";
 import StyledComponentsRegistry from "../providers/styled-components-registry";
 import "./globals.css";
+import { defaultLocale } from "@/middleware";
 
 const inter = Inter({ subsets: ["latin"] });
 const openSans = Open_Sans({
@@ -22,11 +23,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { lang: string };
 }) {
   return (
-    <html lang="en">
+    <html lang={params.lang ?? defaultLocale}>
       <body
         className={`${inter.className} ${openSans.variable} ${montserrat.variable}`}
       >

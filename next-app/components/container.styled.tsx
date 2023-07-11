@@ -4,5 +4,7 @@ export const Container = styled.div<{ $large?: boolean; $color?: string }>`
   position: relative;
   display: flex;
   justify-content: center;
-  /* height: 100vh; */
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1900px;
 `;

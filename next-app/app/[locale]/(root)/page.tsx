@@ -1,7 +1,7 @@
 import HeroSection from "@/sections/hero";
 import { TabsSection } from "@/sections/tabs";
 
-export default async function Home() {
+export default async function Home({}) {
   const order = ["hero", "tabs"];
 
   return order.map((item) => {

@@ -21,7 +21,7 @@ router.get(
   async function (req: Request, res: Response, next: NextFunction) {
     const { sectionName } = req.params;
 
-    const heroSection = await prisma.heroSection.findMany({
+    const heroSection = await prisma.section.findMany({
       where: {
         section: sectionName as Section,
       },
@@ -42,7 +42,7 @@ router.patch(
   async function (req: Request, res: Response, next: NextFunction) {
     const { sectionName } = req.params;
 
-    const heroSection = await prisma.heroSection.updateMany({
+    const section = await prisma.section.updateMany({
       where: {
         section: sectionName as Section,
       },
@@ -51,17 +51,17 @@ router.patch(
         data: req.body.data,
       },
     });
-    if (heroSection.count === 0) {
-      await prisma.heroSection.create({
+    if (section.count === 0) {
+      await prisma.section.create({
         data: {
           section: sectionName as Section,
           data: req.body.data,
         },
       });
 
-      heroSection.count = 1;
+      section.count = 1;
     }
-    res.send(heroSection);
+    res.send(section);
     res.end();
   }
 );
