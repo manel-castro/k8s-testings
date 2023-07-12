@@ -42,27 +42,41 @@ const LanguageSelector = ({
       {isOpen && buttonBoundings && (
         <div
           style={{
+            opacity: 0.2,
+            backgroundColor: "black",
+            height: "100%",
+            width: "100%",
             position: "absolute",
-            top: buttonBoundings.top + 30 + "px",
-            right: "0px",
-            backgroundColor: "white",
+            top: 0,
+            left: 0,
             zIndex: 2,
-            width: 60,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 5,
           }}
+          onClick={() => setIsOpen(false)}
         >
-          {availableLanguages.map((item, index) => (
-            <LanguageItem
-              onClick={() => onSelectLanguage(item.name)}
-              key={index}
-            >
-              {item.name}
-              {item.image}
-            </LanguageItem>
-          ))}
+          <div
+            style={{
+              position: "absolute",
+              top: buttonBoundings.top + 30 + "px",
+              right: "0px",
+              backgroundColor: "white",
+              zIndex: 2,
+              width: 60,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 5,
+            }}
+          >
+            {availableLanguages.map((item, index) => (
+              <LanguageItem
+                onClick={() => onSelectLanguage(item.name)}
+                key={index}
+              >
+                {item.name}
+                {item.image}
+              </LanguageItem>
+            ))}
+          </div>
         </div>
       )}
     </>
