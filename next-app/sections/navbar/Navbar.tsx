@@ -21,6 +21,56 @@ const NavbarSection = ({ locale }: { locale: string }) => {
       code: "en",
       image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
     },
+    {
+      name: "Español",
+      code: "es",
+      image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
+    },
+    {
+      name: "English",
+      code: "en",
+      image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
+    },
+    {
+      name: "Español",
+      code: "es",
+      image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
+    },
+    {
+      name: "English",
+      code: "en",
+      image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
+    },
+    {
+      name: "Español",
+      code: "es",
+      image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
+    },
+    {
+      name: "English",
+      code: "en",
+      image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
+    },
+    {
+      name: "Español",
+      code: "es",
+      image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
+    },
+    {
+      name: "English",
+      code: "en",
+      image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
+    },
+    {
+      name: "Español",
+      code: "es",
+      image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
+    },
+    {
+      name: "English",
+      code: "en",
+      image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
+    },
   ];
 
   return (

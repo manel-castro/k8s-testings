@@ -4,6 +4,7 @@ import { changeLocale } from "@/utils/locales";
 import { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { getIsMobile } from "@/utils/isMobile";
 
 const LanguageSelector = ({
   currentLanguage,
@@ -18,6 +19,8 @@ const LanguageSelector = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [buttonBoundings, setButtonBoundings] = useState<DOMRect>();
+
+  const isMobile = getIsMobile();
 
   const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -53,22 +56,29 @@ const LanguageSelector = ({
             position: "absolute",
             top: 0,
             left: 0,
-            zIndex: 2,
+            zIndex: 5,
             display: "flex",
-            alignItems: "center",
+            alignItems: isMobile ? "flex-start" : "center",
             justifyContent: "center",
           }}
         >
           <div
             style={{
               backgroundColor: "white",
-              padding: 20,
+              padding: 50,
               width: "100%",
               maxWidth: "1000px",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div>Select Your Language</div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: 10,
+                marginBottom: 40,
+              }}
+            >
+              <div style={{ fontSize: 30 }}>Select Your Language</div>
               <div
                 style={{ cursor: "pointer" }}
                 onClick={() => setIsOpen(false)}
@@ -87,9 +97,10 @@ const LanguageSelector = ({
                 <LanguageItem
                   onClick={() => onSelectLanguage(item.code)}
                   key={index}
+                  style={{ gap: 20 }}
                 >
-                  {item.name}
                   {item.image}
+                  {item.name}
                 </LanguageItem>
               ))}
             </div>
@@ -102,9 +113,7 @@ const LanguageSelector = ({
 
 const LanguageItem = styled.div`
   display: flex;
-  justify-content: space-between;
   padding: 5px;
-
   width: 100%;
 
   &:hover {
