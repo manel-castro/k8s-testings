@@ -3,13 +3,18 @@
 import { changeLocale } from "@/utils/locales";
 import { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 const LanguageSelector = ({
   currentLanguage,
   availableLanguages,
 }: {
   currentLanguage: string;
-  availableLanguages: { name: string; image: React.JSX.Element }[];
+  availableLanguages: {
+    name: string;
+    code: string;
+    image: React.JSX.Element;
+  }[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [buttonBoundings, setButtonBoundings] = useState<DOMRect>();
@@ -26,7 +31,7 @@ const LanguageSelector = ({
   const onSelectLanguage = (lang: string) => {
     changeLocale(
       lang,
-      availableLanguages.map((item) => item.name)
+      availableLanguages.map((item) => item.code)
     );
   };
 
@@ -42,40 +47,52 @@ const LanguageSelector = ({
       {isOpen && buttonBoundings && (
         <div
           style={{
-            opacity: 0.2,
-            backgroundColor: "black",
-            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.2)",
+            height: "100vh",
             width: "100%",
             position: "absolute",
             top: 0,
             left: 0,
             zIndex: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          onClick={() => setIsOpen(false)}
         >
           <div
             style={{
-              position: "absolute",
-              top: buttonBoundings.top + 30 + "px",
-              right: "0px",
               backgroundColor: "white",
-              zIndex: 2,
-              width: 60,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 5,
+              padding: 20,
+              width: "100%",
+              maxWidth: "1000px",
             }}
           >
-            {availableLanguages.map((item, index) => (
-              <LanguageItem
-                onClick={() => onSelectLanguage(item.name)}
-                key={index}
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>Select Your Language</div>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsOpen(false)}
               >
-                {item.name}
-                {item.image}
-              </LanguageItem>
-            ))}
+                <Cross1Icon height={20} width={20} />
+              </div>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridGap: "2em",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              }}
+            >
+              {availableLanguages.map((item, index) => (
+                <LanguageItem
+                  onClick={() => onSelectLanguage(item.code)}
+                  key={index}
+                >
+                  {item.name}
+                  {item.image}
+                </LanguageItem>
+              ))}
+            </div>
           </div>
         </div>
       )}

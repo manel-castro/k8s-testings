@@ -12,11 +12,13 @@ const NavbarSection = ({ locale }: { locale: string }) => {
 
   const availableLanguages = [
     {
-      name: "es",
+      name: "Español",
+      code: "es",
       image: <Image src={sp} width={30} height={20} alt="flag of sp" />,
     },
     {
-      name: "en",
+      name: "English",
+      code: "en",
       image: <Image src={uk} width={30} height={20} alt="flag of uk" />,
     },
   ];
