@@ -5,6 +5,8 @@ import uk from "@/assets/uk.png";
 import { Container } from "@/components/container.styled";
 import Image from "next/image";
 import LanguageSelector from "./components/languageSelector";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/navigation";
 
 const NavbarSection = ({ locale }: { locale: string }) => {
   const availableLanguages = [
@@ -20,9 +22,18 @@ const NavbarSection = ({ locale }: { locale: string }) => {
     },
   ];
 
+  const router = useRouter();
+
   return (
     <Container style={{ justifyContent: "space-between" }}>
       <div>Logo and menu</div>
+      <div
+        onClick={() => {
+          router.push("contact");
+        }}
+      >
+        Contacto
+      </div>
       <div>
         <LanguageSelector
           currentLanguage={locale}
