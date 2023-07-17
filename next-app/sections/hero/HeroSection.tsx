@@ -32,7 +32,6 @@ export const HeroSection = ({
             position: "absolute",
             bottom: 0,
             padding: 15,
-
             zIndex: 2,
           }}
         >
@@ -88,13 +87,13 @@ export const HeroSection = ({
       <Container
         style={{
           backgroundColor: "white",
-          height: "70vh",
+          height: "100vh",
           width: "100%",
         }}
       >
         <div
           style={{
-            padding: 15,
+            padding: 45,
             width: "100%",
             height: "100%",
             display: "flex",
@@ -131,7 +130,9 @@ export const HeroSection = ({
               {description}
             </Description>
             <Link href={buttonLink} style={{ marginLeft: 10 }}>
-              <Button style={{ marginTop: 60 }}>{button}</Button>
+              <Button $large style={{ marginTop: 60 }}>
+                {button}
+              </Button>
             </Link>
           </div>
         </div>

@@ -6,6 +6,7 @@ export const Title = styled.h1<{
   $isShadow?: boolean;
 }>`
   color: ${({ $color }) => $color || "slateblue"};
+  white-space: nowrap;
   font-size: ${({ $large }) => ($large ? "3em" : "2em")};
   font-weight: ${({ $large }) => ($large ? 800 : 500)};
   font-family: var(--font-open-sans);
