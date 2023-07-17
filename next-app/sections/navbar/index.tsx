@@ -1,9 +1,5 @@
-import { useLocale } from "next-intl";
-
 import NavbarSection from "./Navbar";
 
-export default async function Navbar({ locale }: { locale: string }) {
-  //eslint-disable-next-line
-
+export default function Navbar({ locale }: { locale: string }) {
   return <NavbarSection locale={locale} />;
 }

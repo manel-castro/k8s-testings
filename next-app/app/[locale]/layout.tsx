@@ -3,8 +3,9 @@ import { Inter, Montserrat, Open_Sans } from "next/font/google";
 import StyledComponentsRegistry from "@/providers/styled-components-registry";
 import "@/app/globals.css";
 import Navbar from "@/sections/navbar";
-import { useLocale } from "next-intl";
+import { NextIntlClientProvider, useLocale } from "next-intl";
 import { notFound } from "next/navigation";
+import getMessages from "@/i18n";
 
 const inter = Inter({ subsets: ["latin"] });
 const openSans = Open_Sans({
@@ -39,15 +40,38 @@ export default function RootLayout({
   return (
     <html>
       <body
+        style={{ height: "100vh", width: "100vw", overflow: "hidden" }}
         className={`${inter.className} ${openSans.variable} ${montserrat.variable}`}
       >
         <StyledComponentsRegistry>
-          <nav>
+          <ClientProvider locale={locale}>
             <Navbar locale={locale} />
-          </nav>
-          {children}
+            <div style={{ overflowY: "auto", height: "100%" }}>{children}</div>
+          </ClientProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
   );
 }
+
+// For next-intl client components
+const ClientProvider = async ({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: string;
+}) => {
+  let messages;
+  try {
+    messages = (await import(`../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {children}{" "}
+    </NextIntlClientProvider>
+  );
+};

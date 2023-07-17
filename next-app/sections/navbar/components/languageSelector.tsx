@@ -1,10 +1,13 @@
 "use client";
 
-import { changeLocale } from "@/utils/locales";
-import { useEffect, useRef, useState } from "react";
-import { styled } from "styled-components";
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { getIsMobile } from "@/utils/isMobile";
+import { changeLocale } from "@/utils/locales";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { styled } from "styled-components";
+import { LanguageItem } from "./components.styled";
 
 const LanguageSelector = ({
   currentLanguage,
@@ -21,6 +24,8 @@ const LanguageSelector = ({
   const [buttonBoundings, setButtonBoundings] = useState<DOMRect>();
 
   const isMobile = getIsMobile();
+
+  const t = useTranslations("Languages");
 
   const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -47,78 +52,72 @@ const LanguageSelector = ({
       >
         {currentLanguage}
       </div>
-      {isOpen && buttonBoundings && (
-        <div
-          style={{
-            backgroundColor: "rgba(0,0,0,0.2)",
-            height: "100vh",
-            width: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 5,
-            display: "flex",
-            alignItems: isMobile ? "flex-start" : "center",
-            justifyContent: "center",
-          }}
-        >
+      {isOpen &&
+        buttonBoundings &&
+        createPortal(
           <div
             style={{
-              backgroundColor: "white",
-              padding: 50,
+              backgroundColor: "rgba(0,0,0,0.2)",
+              height: "100vh",
               width: "100%",
-              maxWidth: "1000px",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 5,
+              display: "flex",
+              alignItems: isMobile ? "flex-start" : "center",
+              justifyContent: "center",
+              overflowY: "scroll",
             }}
           >
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: 10,
-                marginBottom: 40,
+                backgroundColor: "white",
+                padding: 50,
+                width: "100%",
+                maxWidth: "800px",
               }}
             >
-              <div style={{ fontSize: 30 }}>Select Your Language</div>
               <div
-                style={{ cursor: "pointer" }}
-                onClick={() => setIsOpen(false)}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: 10,
+                  marginBottom: 40,
+                }}
               >
-                <Cross1Icon height={20} width={20} />
+                <div style={{ fontSize: 30 }}>{t("select_your_language")}</div>
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Cross1Icon height={20} width={20} />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridGap: "2em",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                }}
+              >
+                {availableLanguages.map((item, index) => (
+                  <LanguageItem
+                    onClick={() => onSelectLanguage(item.code)}
+                    key={index}
+                    style={{ gap: 20 }}
+                  >
+                    {item.image}
+                    {item.name}
+                  </LanguageItem>
+                ))}
               </div>
             </div>
-            <div
-              style={{
-                display: "grid",
-                gridGap: "2em",
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              }}
-            >
-              {availableLanguages.map((item, index) => (
-                <LanguageItem
-                  onClick={() => onSelectLanguage(item.code)}
-                  key={index}
-                  style={{ gap: 20 }}
-                >
-                  {item.image}
-                  {item.name}
-                </LanguageItem>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 };
 
-const LanguageItem = styled.div`
-  display: flex;
-  padding: 5px;
-  width: 100%;
-
-  &:hover {
-    background-color: slateblue;
-    color: white;
-  }
-`;
 export default LanguageSelector;
