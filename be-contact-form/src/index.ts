@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 var cors = require("cors");
+import cookieSession from "cookie-session";
 import { errorHandler } from "./middlewares/error-handler";
 import { AuthRouter } from "./routes/auth/";
 import { PublicRouter } from "./routes/public";
@@ -8,6 +9,13 @@ import { PublicRouter } from "./routes/public";
 const app = express();
 
 app.use(express.json());
+app.use(
+  cookieSession({
+    //this is to set req.session
+    signed: false,
+    secure: process.env.NODE_ENV !== "test", // test run in plain HTTP, not HTTPS
+  })
+);
 
 app.use(cors());
 

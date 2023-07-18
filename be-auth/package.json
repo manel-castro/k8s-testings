@@ -1,5 +1,5 @@
 {
-  "name": "be-contact-form",
+  "name": "be-auth",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -22,9 +22,9 @@
     "jsonwebtoken": "^9.0.1"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.1",
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.2",
+    "@types/amqplib": "^0.10.1",
     "nodemon": "^3.0.1",
     "prisma": "^5.0.0",
     "rimraf": "^5.0.1",
