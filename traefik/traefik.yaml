@@ -1,0 +1,8 @@
+entrypoints:
+  unsecure:
+    address: :80
+
+providers:
+  file:
+    filename: /etc/traefik/split.yaml
+    watch: true

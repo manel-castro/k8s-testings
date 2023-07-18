@@ -1,0 +1,20 @@
+http:
+  routers:
+    allbackendRouter:
+      rule: "Host(`localhost`) && PathPrefix(`/api/users`)"
+      service: users
+    allbackendRouter2:
+      rule: "Host(`localhost`) && PathPrefix(`/auth`)"
+      service: contact
+
+  services:
+    users:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:9001/"
+    contact:
+      loadBalancer:
+        servers:
+          - url: "http://be-contact-form:9000/"
+# https://github.com/hnasr/javascript_playground/blob/master/traefik/split.yaml
+# https://www.youtube.com/watch?v=C6IL8tjwC5E&t=1586s

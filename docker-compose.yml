@@ -1,19 +1,35 @@
 services:
-  back-end:
+  # back-end:
+  #   build:
+  #     context: ./be-pages
+  #     dockerfile: ./Dockerfile
+  #     target: development
+  #   command: npm run start:dev
+  #   env_file:
+  #     - ./be-pages/.env
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     # - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '9001:9001'
+  be-contact-form:
     build:
-      context: ./be-pages
+      context: ./be-contact-form
       dockerfile: ./Dockerfile
       target: development
-    command: npm run start:dev
+
     env_file:
-      - ./be-pages/.env
+      - ./be-contact-form/.env
     depends_on:
       - db
+      - traefik
     volumes:
       # - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - '9001:9001'
+      - '9000:9000'
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -24,6 +40,19 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    # command: 
+    #   - "--configFile=traefik/traefik.yaml"
+    ports:
+      - 80:80
+      - 443:443
+      # - 8080:8080  # (optional) expose the dashboard !don't use in production!
+    volumes:
+      - ./traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
 
 volumes:
   db:
