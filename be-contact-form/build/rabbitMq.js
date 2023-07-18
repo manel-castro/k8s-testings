@@ -19,7 +19,7 @@ exports.QUEUE_NAME = "technical";
 const createRabbitMqConnection = () => new Promise((res, rej) => {
     if (ch)
         return res(ch);
-    callback_api_1.default.connect(`amqp://localhost`, (err, connection) => {
+    callback_api_1.default.connect(`amqp://rabbitmq`, (err, connection) => {
         if (err) {
             throw err;
         }
@@ -27,6 +27,9 @@ const createRabbitMqConnection = () => new Promise((res, rej) => {
             if (err) {
                 throw err;
             }
+            channel.assertQueue(exports.QUEUE_NAME, {
+                durable: false,
+            });
             // channel.sendToQueue(queueName, Buffer.from(message));
             ch = channel;
             return res(ch);
@@ -36,9 +39,6 @@ const createRabbitMqConnection = () => new Promise((res, rej) => {
 exports.createRabbitMqConnection = createRabbitMqConnection;
 const sendMessage = (message, queueName = exports.QUEUE_NAME) => __awaiter(void 0, void 0, void 0, function* () {
     const channel = yield createRabbitMqConnection();
-    channel.assertQueue(queueName, {
-        durable: false,
-    });
     channel.sendToQueue(queueName, Buffer.from(message));
 });
 exports.sendMessage = sendMessage;

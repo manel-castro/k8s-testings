@@ -10,6 +10,16 @@ const cookie_session_1 = __importDefault(require("cookie-session"));
 const error_handler_1 = require("./middlewares/error-handler");
 const auth_1 = require("./routes/auth/");
 const public_1 = require("./routes/public");
+const rabbitMq_1 = require("./rabbitMq");
+/**
+ * RABBIT MQ
+ */
+try {
+    (0, rabbitMq_1.createRabbitMqConnection)();
+}
+catch (e) {
+    console.log(e);
+}
 const app = express();
 app.use(express.json());
 app.use((0, cookie_session_1.default)({

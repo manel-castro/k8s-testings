@@ -14,6 +14,13 @@ const createRabbitMqConnection = (): Promise<amqp.Channel> =>
           throw err;
         }
 
+        channel.assertQueue(
+          QUEUE_NAME
+          //   {
+          //   durable: false,
+          // }
+        );
+
         // channel.sendToQueue(queueName, Buffer.from(message));
         ch = channel;
         return res(ch);
@@ -23,9 +30,6 @@ const createRabbitMqConnection = (): Promise<amqp.Channel> =>
 
 const sendMessage = async (message: string, queueName = QUEUE_NAME) => {
   const channel = await createRabbitMqConnection();
-  channel.assertQueue(queueName, {
-    durable: false,
-  });
 
   channel.sendToQueue(queueName, Buffer.from(message));
 };
