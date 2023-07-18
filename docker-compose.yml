@@ -9,7 +9,7 @@ services:
       - ./be-contact-form/.env
     depends_on:
       db: 
-        condition: service_started
+        condition: service_healthy
       traefik:
         condition: service_started
       rabbitmq:
@@ -29,7 +29,7 @@ services:
       - ./be-auth/.env
     depends_on:
       db: 
-        condition: service_started
+        condition: service_healthy
       traefik:
         condition: service_started
       rabbitmq:
@@ -50,6 +50,12 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
   traefik:
     image: traefik:v2.5
     container_name: traefik

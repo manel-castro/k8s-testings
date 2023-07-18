@@ -27,9 +27,11 @@ const createRabbitMqConnection = () => new Promise((res, rej) => {
             if (err) {
                 throw err;
             }
-            channel.assertQueue(exports.QUEUE_NAME, {
-                durable: false,
-            });
+            channel.assertQueue(exports.QUEUE_NAME
+            //   {
+            //   durable: false,
+            // }
+            );
             // channel.sendToQueue(queueName, Buffer.from(message));
             ch = channel;
             return res(ch);
