@@ -21,7 +21,11 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { email, password, adminKey } = req.body;
+
+    if (adminKey !== process.env.ADMIN_SIGNUP_KEY) {
+      return next(new BadRequestError("Provide a vaild admin key"));
+    }
 
     const existingUser = await prisma.user.findFirst({ where: { email } });
 
