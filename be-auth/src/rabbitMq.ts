@@ -5,7 +5,7 @@ export let QUEUE_NAME = "technical";
 const createRabbitMqConnection = (): Promise<amqp.Channel> =>
   new Promise((res, rej) => {
     if (ch) return res(ch);
-    amqp.connect(`amqp://localhost`, (err, connection) => {
+    amqp.connect(`amqp://rabbitmq`, (err, connection) => {
       if (err) {
         throw err;
       }
@@ -31,8 +31,8 @@ const sendMessage = async (message: string, queueName = QUEUE_NAME) => {
 };
 
 const consume = async (
-  queueName = QUEUE_NAME,
-  messageCallback: (message: Buffer) => void
+  messageCallback: (message: Buffer) => void,
+  queueName = QUEUE_NAME
 ) => {
   const channel = await createRabbitMqConnection();
 

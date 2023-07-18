@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { UserPayload } from "../types/jwt";
 
 export const CheckUser = async () => {
-  return consume(undefined, async (message: Buffer) => {
+  return consume(async (message: Buffer) => {
     const messageObj = JSON.parse(message.toString());
 
     const { jwt: jwtToken } = messageObj;

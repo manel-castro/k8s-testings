@@ -5,6 +5,16 @@ import cookieSession from "cookie-session";
 import { errorHandler } from "./middlewares/error-handler";
 import { AuthRouter } from "./routes/auth/";
 import { PublicRouter } from "./routes/public";
+import { createRabbitMqConnection } from "./rabbitMq";
+
+/**
+ * RABBIT MQ
+ */
+try {
+  createRabbitMqConnection();
+} catch (e) {
+  console.log(e);
+}
 
 const app = express();
 

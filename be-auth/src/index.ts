@@ -13,11 +13,12 @@ import { CheckUser } from "./queues/check-user";
  * RABBIT MQ
  */
 try {
-  createRabbitMqConnection();
+  createRabbitMqConnection().then((res) => {
+    CheckUser();
+  });
 } catch (e) {
   console.log(e);
 }
-CheckUser();
 
 /**
  * API REST
