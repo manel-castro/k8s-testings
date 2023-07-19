@@ -12,3 +12,7 @@ MISSING STUFF:
 - Tune node for multithreading
 - Finish form in front-end
 - Backoffice
+- TLS/SSL Docker containers / Docker security
+- Deployment
+- Docker swarm
+- Simulating users + density of calls
