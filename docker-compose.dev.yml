@@ -2,7 +2,7 @@ services:
   be-contact-form:
     build:
       context: ./be-contact-form
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.dev
       target: development
 
     env_file:
@@ -15,13 +15,14 @@ services:
       rabbitmq:
         condition: service_healthy
     volumes:
+      - ./be-contact-form:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '9000:9000'
   be-auth:
     build:
       context: ./be-auth
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.dev
       target: development
 
     env_file:
@@ -35,6 +36,7 @@ services:
         condition: service_healthy
 
     volumes:
+      - ./be-auth:/usr/src/app/
       - /usr/src/app/node_modules
     ports:
       - '9001:9001'
