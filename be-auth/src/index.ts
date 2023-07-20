@@ -6,16 +6,11 @@ import { errorHandler } from "./middlewares/error-handler";
 import { CurrentUserRouter } from "./routes/current-user";
 import { SigninRouter } from "./routes/signin";
 import { SignupRouter } from "./routes/signup";
-import { createRabbitMqConnection } from "./rabbitMq";
-import { CheckUser } from "./queues/check-user";
 
 /**
  * RABBIT MQ
  */
 try {
-  createRabbitMqConnection().then((res) => {
-    CheckUser();
-  });
 } catch (e) {
   console.log(e);
 }

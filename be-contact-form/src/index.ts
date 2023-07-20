@@ -6,15 +6,18 @@ import { errorHandler } from "./middlewares/error-handler";
 import { AuthRouter } from "./routes/auth/";
 import { PublicRouter } from "./routes/public";
 import { createRabbitMqConnection } from "./rabbitMq";
+import { natsWrapper } from "./nats-wrapper";
 
 /**
  * RABBIT MQ
  */
-try {
-  createRabbitMqConnection();
-} catch (e) {
-  console.log(e);
-}
+(async () => {
+  try {
+    await natsWrapper.connect("paginas", "lasñdf", "http://localhost:4222");
+  } catch (e) {
+    console.log(e);
+  }
+})();
 
 const app = express();
 

@@ -28,7 +28,7 @@ spec:
               "2",
               "-SD",
               "-cid",
-              "pages",
+              "paginas",
             ]
 ---
 apiVersion: v1
