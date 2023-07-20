@@ -1,9 +1,13 @@
+import nats from "node-nats-streaming";
 import amqp from "amqplib/callback_api";
 let ch: amqp.Channel;
 export let QUEUE_NAME = "technical";
 
 const createRabbitMqConnection = (): Promise<amqp.Channel> =>
   new Promise((res, rej) => {
+    const stan = nats.connect("pages", "abc", {
+      url: "http://localhost:4222",
+    });
     if (ch) return res(ch);
     amqp.connect(`amqp://rabbitmq`, (err, connection) => {
       if (err) {

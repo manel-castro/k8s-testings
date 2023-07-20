@@ -81,6 +81,14 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
+  nats:
+    image: 'nats:0.8.0'
+    entrypoint: "/gnatsd -DV"
+    expose:
+      - "4222"
+    ports:
+      - "8222:8222"
+    hostname: nats-server
 
 volumes:
   db:

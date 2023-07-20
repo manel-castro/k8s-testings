@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-auth
+  template:
+    metadata:
+      labels:
+        app: be-auth
+    spec:
+      containers:
+        - name: be-auth
+          # image: us.gcr.io/ticketing-dev-359710/be-auth
+          image: manelcastro/be-auth
+          env:
+            - name: MONGO_URI
+              value: "mongodb://be-auth-mongo-srv:27017/be-auth" # Not issue to push to Git since only useful inside cluster
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-auth-srv
+spec:
+  selector:
+    app: be-auth
+  type: ClusterIP
+  ports:
+    - name: be-auth
+      protocol: TCP
+      port: 9001
+      targetPort: 9001
