@@ -11,7 +11,7 @@ http:
     users:
       loadBalancer:
         servers:
-          - url: "http://localhost:9001/"
+          - url: "http://be-auth:9001/"
     contact:
       loadBalancer:
         servers:
