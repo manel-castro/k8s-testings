@@ -20,6 +20,9 @@ NEXT:
    2.a. in case postgres complains about database run migrate through port-forward in a node instance (think how to do that in production env)
 3. Finish nats connectivity
 
+- how-to-deploy-container-using-docker-compose-to-google-cloud
+  https://stackoverflow.com/questions/61157940/how-to-deploy-container-using-docker-compose-to-google-cloud
+
 MISSING STUFF:
 
 - Tune postgresql

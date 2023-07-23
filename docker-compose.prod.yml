@@ -1,0 +1,98 @@
+services:
+  be-contact-form:
+    image: manelcastro/be-auth
+
+    environment:
+      - DATABASE_URL="postgresql://postgres:randompassword@db:5434/authdb?schema=public"
+      - JWT_KEY="adfñklj12"
+      - ADMIN_SIGNUP_KEY="123456"
+    
+    depends_on:
+      db: 
+        condition: service_healthy
+      traefik:
+        condition: service_started
+      # rabbitmq:
+      #   condition: service_healthy
+    ports:
+      - '9000:9000'
+
+  # be-auth:
+  #   build:
+  #     context: ./be-auth
+  #     dockerfile: ./Dockerfile
+  #     target: development
+
+  #   env_file:
+  #     - ./be-auth/.env
+  #   depends_on:
+  #     db: 
+  #       condition: service_healthy
+  #     traefik:
+  #       condition: service_started
+  #     # rabbitmq:
+  #     #   condition: service_healthy
+
+  #   ports:
+  #     - '9001:9001'
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    ports:
+      - 80:80
+      - 443:443
+      # - 8080:8080  # (optional) expose the dashboard !don't use in production!
+    volumes:
+      - traefikconf:/etc/traefik
+    restart: unless-stopped
+  # rabbitmq:
+  #   image: rabbitmq:3.12.1-management-alpine
+  #   container_name: 'rabbitmq'
+  #   ports:
+  #       - 5672:5672
+  #       - 15672:15672
+  #   volumes:
+  #       - ${WEBAPP_STORAGE_HOME}/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+  #       - ${WEBAPP_STORAGE_HOME}/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  #   healthcheck:
+  #     test: rabbitmq-diagnostics -q ping
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 3
+
+volumes:
+  db:
+    driver: azure_file
+    driver_opts:
+      share_name: restdalistorage
+      storage_account_name: restdalistorage
+      storage_account_key: "OEghXe/joVlaM9lsAa3M2+LQN1HF8AvPbB/rGAMyflTCeTUv3uMgS/ebZ728CmUUKllLAFM36cEq+AStvOD3NQ=="  
+  traefikconf:
+    driver: azure_file
+    driver_opts:
+      share_name: restdalistorage
+      storage_account_name: restdalistorage
+      storage_account_key: "OEghXe/joVlaM9lsAa3M2+LQN1HF8AvPbB/rGAMyflTCeTUv3uMgS/ebZ728CmUUKllLAFM36cEq+AStvOD3NQ=="
+
+    
+networks:
+  default:
+    driver: bridge
+
+      

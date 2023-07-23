@@ -12,30 +12,29 @@ services:
         condition: service_healthy
       traefik:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
-    volumes:
-      - /usr/src/app/node_modules
+      # rabbitmq:
+      #   condition: service_healthy
+    # volumes:
+    #   - /usr/src/app/node_modules
     ports:
       - '9000:9000'
   be-auth:
-    build:
-      context: ./be-auth
-      dockerfile: ./Dockerfile
-      target: development
+    image: manelcastro/be-auth
 
-    env_file:
-      - ./be-auth/.env
+    environment:
+      - DATABASE_URL="postgresql://postgres:randompassword@db:5434/authdb?schema=public"
+      - JWT_KEY="adfñklj12"
+      - ADMIN_SIGNUP_KEY="123456"
     depends_on:
       db: 
         condition: service_healthy
       traefik:
         condition: service_started
-      rabbitmq:
-        condition: service_healthy
+      # rabbitmq:
+      #   condition: service_healthy
 
-    volumes:
-      - /usr/src/app/node_modules
+    # volumes:
+    #   - /usr/src/app/node_modules
     ports:
       - '9001:9001'
   db:
@@ -63,22 +62,22 @@ services:
       # - 8080:8080  # (optional) expose the dashboard !don't use in production!
     volumes:
       - ./traefik:/etc/traefik
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
-  rabbitmq:
-    image: rabbitmq:3.12.1-management-alpine
-    container_name: 'rabbitmq'
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 10s
-      timeout: 30s
-      retries: 3
+  # rabbitmq:
+  #   image: rabbitmq:3.12.1-management-alpine
+  #   container_name: 'rabbitmq'
+  #   ports:
+  #       - 5672:5672
+  #       - 15672:15672
+  #   volumes:
+  #       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+  #       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  #   healthcheck:
+  #     test: rabbitmq-diagnostics -q ping
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 3
 
 volumes:
   db:
