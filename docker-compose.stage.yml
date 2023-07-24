@@ -1,23 +1,23 @@
 services:
-  be-contact-form:
-    build:
-      context: ./be-contact-form
-      dockerfile: ./Dockerfile
-      target: development
+  # be-contact-form:
+  #   build:
+  #     context: ./be-contact-form
+  #     dockerfile: ./Dockerfile
+  #     target: development
 
-    env_file:
-      - ./be-contact-form/.env
-    depends_on:
-      db: 
-        condition: service_healthy
-      traefik:
-        condition: service_started
-      # rabbitmq:
-      #   condition: service_healthy
-    # volumes:
-    #   - /usr/src/app/node_modules
-    ports:
-      - '9000:9000'
+  #   env_file:
+  #     - ./be-contact-form/.env
+  #   depends_on:
+  #     db: 
+  #       condition: service_healthy
+  #     traefik:
+  #       condition: service_started
+  #     # rabbitmq:
+  #     #   condition: service_healthy
+  #   # volumes:
+  #   #   - /usr/src/app/node_modules
+  #   ports:
+  #     - '9000:9000'
   be-auth:
     image: manelcastro/be-auth
 
@@ -37,6 +37,10 @@ services:
     #   - /usr/src/app/node_modules
     ports:
       - '9001:9001'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=PathPrefix(`/api/users`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -56,13 +60,19 @@ services:
   traefik:
     image: traefik:v2.5
     container_name: traefik
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
       - 80:80
       - 443:443
       # - 8080:8080  # (optional) expose the dashboard !don't use in production!
     volumes:
-      - ./traefik:/etc/traefik
-      # - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - ./traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
   # rabbitmq:
   #   image: rabbitmq:3.12.1-management-alpine

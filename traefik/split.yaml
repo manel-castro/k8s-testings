@@ -1,10 +1,10 @@
 http:
   routers:
     allbackendRouter:
-      rule: "Host(`localhost`) && PathPrefix(`/api/users`)"
+      rule: "PathPrefix(`/api/users`)"
       service: users
     allbackendRouter2:
-      rule: "Host(`localhost`) && PathPrefix(`/auth`)"
+      rule: "PathPrefix(`/auth`)"
       service: contact
 
   services:
