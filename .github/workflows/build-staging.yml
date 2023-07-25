@@ -37,7 +37,7 @@ jobs:
         with:
           context: ./be-simply
           push: true
-          tags: manelcastro/contoso-website:latest,manelcastro/contoso-website:${{ steps.fetch_version.outputs.TAG }}
+          tags: manelcastro/be-simply:latest,manelcastro/be-simply:${{ steps.fetch_version.outputs.TAG }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
