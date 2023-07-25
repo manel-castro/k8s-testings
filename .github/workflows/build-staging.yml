@@ -37,7 +37,7 @@ jobs:
         with:
           context: ./be-simply
           push: true
-          tags: registry.hub.docker.com/manelcastro/be-simply:latest,registry.hub.docker.com/manelcastro/be-simply:${{ steps.fetch_version.outputs.TAG }}
+          tags: manelcastro/be-simply,manelcastro/be-simply:${{ steps.fetch_version.outputs.TAG }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
