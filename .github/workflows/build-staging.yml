@@ -54,7 +54,7 @@ jobs:
          version: v3.3.1 
          
      - name: Azure Kubernetes set context
-       uses: Azure/aks-set-context@v3
+       uses: Azure/aks-set-context@v1
        with:
          # Resource Group Name
          resource-group: K8s-testings
