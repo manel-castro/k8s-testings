@@ -63,16 +63,11 @@ jobs:
          # AKS Cluster Subscription
          creds: ${{ secrets.AZURE_CREDENTIALS }}
          
-     - name: Run Helm Deploy
-       run: |
-         helm upgrade \
-            --install \
-            --create-namespace \
-            --atomic \
-            --wait \
-            --namespace production \
-            be-simply \
-            ./infrastructure/k8s \
-            --set image.repository=manelcastro \
-            --set dns.name=${{ secrets.DNS_NAME }} \
-            --set image.tag=${GITHUB_REF##*/}
+      # Deploys application based on given manifest file
+     - name: Deploys application
+       uses: Azure/k8s-deploy@v4
+       with:
+         action: deploy
+         manifests: ./infrastructure/k8s/be-simply.yml
+         images: |
+           registry.hub.docker.com/manelcastro/be-simply:${{ github.sha }}
