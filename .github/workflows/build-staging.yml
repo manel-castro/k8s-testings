@@ -69,5 +69,3 @@ jobs:
        with:
          action: deploy
          manifests: ./infrastructure/k8s/be-simply.yml
-         images: |
-           registry.hub.docker.com/manelcastro/be-simply:${{ github.sha }}
