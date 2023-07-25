@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-simply-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-simply
+  template:
+    metadata:
+      labels:
+        app: be-simply
+    spec:
+      containers:
+        - name: be-simply
+          # image: us.gcr.io/ticketing-dev-359710/be-simply
+          image: manelcastro/be-simply
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-simply-srv
+spec:
+  selector:
+    app: be-simply
+  type: ClusterIP
+  ports:
+    - name: be-simply
+      protocol: TCP
+      port: 9002
+      targetPort: 9002

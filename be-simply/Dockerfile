@@ -1,0 +1,12 @@
+FROM node:lts As development
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+RUN npm install typescript@5.1.6
+
+COPY . .
+
+CMD ["npm", "start"]
