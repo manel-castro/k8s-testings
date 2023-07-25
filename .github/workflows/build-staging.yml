@@ -69,3 +69,5 @@ jobs:
        with:
          action: deploy
          manifests: ./infrastructure/k8s/be-simply.yml
+         
+     - run: kubectl describe deployment be-simply-depl
