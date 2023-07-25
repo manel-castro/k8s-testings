@@ -68,4 +68,4 @@ jobs:
        uses: Azure/k8s-deploy@v4
        with:
          action: deploy
-         manifests: ./infrastructure/k8s/be-simply.yml
+         manifests: ./infrastructure/k8s
