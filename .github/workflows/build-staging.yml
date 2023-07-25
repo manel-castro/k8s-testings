@@ -48,3 +48,4 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - run: kubectl rollout restart deployment be-simply-depl # reach that cluster and tell to restart (refetch image)
