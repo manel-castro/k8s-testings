@@ -70,4 +70,4 @@ jobs:
          action: deploy
          manifests: ./infrastructure/k8s/be-simply.yml
          
-     - run: kubectl describe deployment be-simply-depl
+     - run: kubectl rollout restart deployment/be-simply-depl
