@@ -72,7 +72,7 @@ jobs:
             --wait \
             --namespace production \
             be-simply \
-            ./kubernetes/contoso-website \
+            ./infrastructure/k8s \
             --set image.repository=manelcastro \
             --set dns.name=${{ secrets.DNS_NAME }} \
             --set image.tag=${GITHUB_REF##*/}
