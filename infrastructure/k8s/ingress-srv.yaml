@@ -28,6 +28,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: be-simply
+                name: be-simply-srv
                 port:
                   number: 9002

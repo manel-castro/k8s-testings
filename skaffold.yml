@@ -11,7 +11,7 @@ build:
     - image: manelcastro/be-auth
       context: ./be-auth
       docker:
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile.dev
       sync:
         manual:
           - src: "src/**/*.ts"
@@ -19,16 +19,16 @@ build:
     - image: manelcastro/be-contact-form
       context: ./be-contact-form
       docker:
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: "**/*.js"
+          - src: "src/**/*.ts"
             dest: .
     - image: manelcastro/be-simply
       context: ./be-simply
       docker:
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile.dev
       sync:
         manual:
-          - src: "**/*.js"
+          - src: "src/**/*.ts"
             dest: .

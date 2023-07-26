@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { consume, sendMessage } from "../rabbitMq";
+import { AuthVerifyListener } from "../events/listeners/auth-verify-listener";
+import { natsWrapper } from "../nats-wrapper";
+import { AuthVerifyPublisher } from "../events/publishers/auth-verify-publisher";
 
 interface UserPayload {
   id: string;
@@ -16,17 +18,18 @@ declare global {
   }
 }
 
-export const currentUser = (
+export const currentUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  console.log("currentUser");
+  // console.log("currentUser");
+  console.log("Request being handled34");
 
   if (!req.session?.jwt) {
     return next();
   }
-
+  // next();
   // try {
   //   const payload = jwt.verify(
   //     req.session.jwt,
@@ -35,17 +38,23 @@ export const currentUser = (
   //   req.currentUser = payload;
   // } catch (e) {}
 
-  consume("current-user", (buffMess, channel) => {
-    const message = buffMess.toString();
+  new AuthVerifyListener(natsWrapper.client, ({ jwt }) => {
+    const message = jwt;
 
+    console.log("validated");
+    req.currentUser = { email: "payload", id: "asdf" };
     try {
       const payload = JSON.parse(message);
       req.currentUser = payload;
 
-      channel.cancel("current-user");
       next();
-    } catch (error) {}
-  });
+    } catch (error) {
+      next();
+    }
+  }).listen();
+  const publisher = new AuthVerifyPublisher(natsWrapper.client);
 
-  sendMessage(JSON.stringify({ jwt: req.session.jwt }));
+  await publisher.publish({ jwt: req.session.jwt });
+
+  // sendMessage(JSON.stringify({ jwt: req.session.jwt }));
 };

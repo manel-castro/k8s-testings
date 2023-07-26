@@ -17,6 +17,14 @@ spec:
           # image: us.gcr.io/ticketing-dev-359710/be-auth
           image: manelcastro/be-contact-form
           env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
             - name: MONGO_URI
               value: "mongodb://be-contact-form-mongo-srv:27017/be-contact-form" # Not issue to push to Git since only useful inside cluster
             - name: JWT_KEY
@@ -36,5 +44,5 @@ spec:
   ports:
     - name: be-contact-form
       protocol: TCP
-      port: 9001
-      targetPort: 9001
+      port: 9000
+      targetPort: 9000

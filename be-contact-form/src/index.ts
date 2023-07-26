@@ -5,39 +5,57 @@ import cookieSession from "cookie-session";
 import { errorHandler } from "./middlewares/error-handler";
 import { AuthRouter } from "./routes/auth/";
 import { PublicRouter } from "./routes/public";
-import { createRabbitMqConnection } from "./rabbitMq";
 import { natsWrapper } from "./nats-wrapper";
 
-/**
- * RABBIT MQ
- */
-(async () => {
+const start = async () => {
+  /**
+   * Environment variables verification
+   */
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error("NATS_CLIENT_ID must be defined");
+  }
+  if (!process.env.NATS_URL) {
+    throw new Error("NATS_URL must be defined");
+  }
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error("NATS_CLUSTER_ID must be defined");
+  }
+
+  /**
+   * NATS
+   */
   try {
-    await natsWrapper.connect("paginas", "lasñdf", "http://localhost:4222");
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+    );
   } catch (e) {
     console.log(e);
   }
-})();
 
-const app = express();
+  const app = express();
 
-app.use(express.json());
-app.use(
-  cookieSession({
-    //this is to set req.session
-    signed: false,
-    secure: process.env.NODE_ENV !== "test", // test run in plain HTTP, not HTTPS
-  })
-);
+  app.use(express.json());
+  app.use(
+    cookieSession({
+      //this is to set req.session
+      signed: false,
+      secure: process.env.NODE_ENV !== "test", // test run in plain HTTP, not HTTPS
+    })
+  );
 
-app.use(cors());
+  app.use(cors());
 
-app.use("/auth", AuthRouter);
-app.use("/public", PublicRouter);
+  app.use("/auth", AuthRouter);
+  app.use("/public", PublicRouter);
 
-app.use(errorHandler);
+  app.use(errorHandler);
 
-const PORT = process.env.PORT || 9000;
-app.listen(PORT, function () {
-  console.log("CORS-enabled web server listening on port " + PORT);
-});
+  const PORT = process.env.PORT || 9000;
+  app.listen(PORT, function () {
+    console.log("CORS-enabled web server listening on port " + PORT);
+  });
+};
+
+start();
