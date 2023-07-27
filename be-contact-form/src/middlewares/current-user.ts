@@ -52,9 +52,13 @@ export const currentUser = async (
       next();
     }
   }).listen();
+  console.log("publishing");
+
   const publisher = new AuthVerifyPublisher(natsWrapper.client);
+  console.log("publisher created");
 
   await publisher.publish({ jwt: req.session.jwt });
+  console.log("published");
 
   // sendMessage(JSON.stringify({ jwt: req.session.jwt }));
 };
