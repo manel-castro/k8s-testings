@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart:dev": "npx prisma migrate dev --name init",
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js"
@@ -12,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@paginas/common": "^1.0.7",
+    "@paginas/common": "^1.0.11",
     "@prisma/client": "5.0.0",
     "amqplib": "0.10.3",
     "cookie-session": "2.0.0",
