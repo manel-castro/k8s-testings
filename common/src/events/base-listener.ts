@@ -28,11 +28,13 @@ export abstract class Listener<T extends Event> {
   }
 
   listen() {
+    console.log("trying to subscribe");
     const subscription = this.client.subscribe(
       this.subject,
       this.queueGroupName,
       this.subscriptionOptions()
     );
+    console.log("trying to onmessage");
 
     subscription.on("message", (msg) => {
       console.log(
