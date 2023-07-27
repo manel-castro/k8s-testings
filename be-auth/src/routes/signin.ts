@@ -21,6 +21,7 @@ router.post(
   validateRequest,
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
+    console.log("test");
 
     const existingUser = await prisma.user.findFirst({ where: { email } });
 
