@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-auth-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-auth-mongo
+  template:
+    metadata:
+      labels:
+        app: be-auth-mongo
+    spec:
+      # volumes:
+      #   - name: be-auth-mongo-storage
+      #     persistentVolumeClaim:
+      #       claimName: auth-db-pvc
+      containers:
+        - name: be-auth-mongo
+          image: mongo
+
+          # volumeMounts:
+          #   - name: be-auth-mongo-storage
+          #     mountPath: /usr/local/var/mongodb/auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-auth-mongo-srv
+spec:
+  selector:
+    app: be-auth-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
