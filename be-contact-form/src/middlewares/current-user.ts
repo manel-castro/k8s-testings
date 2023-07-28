@@ -18,6 +18,13 @@ declare global {
   }
 }
 
+import redis from "redis";
+export const publisher = redis.createClient({
+  url: "127.0.0.1",
+
+  no_ready_check: true,
+});
+
 export const currentUser = async (
   req: Request,
   res: Response,
@@ -38,24 +45,24 @@ export const currentUser = async (
   //   req.currentUser = payload;
   // } catch (e) {}
 
-  new AuthVerifyListener(natsWrapper.client, ({ jwt }) => {
-    const message = jwt;
+  // new AuthVerifyListener(natsWrapper.client, ({ jwt }) => {
+  //   const message = jwt;
 
-    console.log("validated");
-    req.currentUser = { email: "payload", id: "asdf" };
-    try {
-      const payload = JSON.parse(message);
-      req.currentUser = payload;
+  //   console.log("validated");
+  //   req.currentUser = { email: "payload", id: "asdf" };
+  //   try {
+  //     const payload = JSON.parse(message);
+  //     req.currentUser = payload;
 
-      next();
-    } catch (error) {
-      next();
-    }
-  }).listen();
-  console.log("publishing");
+  //     next();
+  //   } catch (error) {
+  //     next();
+  //   }
+  // }).listen();
+  // console.log("publishing");
 
-  const publisher = new AuthVerifyPublisher(natsWrapper.client);
-  console.log("publisher created");
+  // const publisher = new AuthVerifyPublisher(natsWrapper.client);
+  // console.log("publisher created");
 
   await publisher.publish({ jwt: req.session.jwt });
   console.log("published");
