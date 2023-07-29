@@ -4,6 +4,8 @@ To start a k8s deployment: skaffold dev --wait-for-deletions=false
 
 If problems with images: skaffold dev --no-prune=false --cache-artifacts=false
 
+If the port on the running machine is busy: kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80
+
 To start a development environment:
 
 - docker-compose -f docker-compose.dev.yml up --build -V
