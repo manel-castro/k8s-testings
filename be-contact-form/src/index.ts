@@ -27,8 +27,15 @@ const start = async () => {
     throw new Error("NATS_CLUSTER_ID must be defined");
   }
 
+  console.log(
+    "ENV vars: ",
+    process.env.NATS_CLUSTER_ID,
+    process.env.NATS_URL,
+    process.env.NATS_CLIENT_ID
+  );
+
   /**
-   * Redis
+   * NATS
    */
   try {
     // redisClient.on("connect", () => {

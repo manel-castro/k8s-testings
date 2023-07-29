@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@paginas/common": "^1.0.13",
+    "@paginas/common": "^1.0.15",
     "@prisma/client": "5.0.0",
     "amqplib": "0.10.3",
     "cookie-session": "2.0.0",

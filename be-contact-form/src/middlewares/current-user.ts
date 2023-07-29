@@ -4,7 +4,7 @@ import { AuthVerifyListener } from "../events/listeners/auth-verify-listener";
 import { natsWrapper } from "../nats-wrapper";
 import { AuthVerifyPublisher } from "../events/publishers/auth-verify-publisher";
 import { redisClient } from "..";
-import { Subjects } from "@paginas/common";
+import { Publisher, Subjects } from "@paginas/common";
 
 interface UserPayload {
   id: string;
@@ -20,6 +20,38 @@ declare global {
   }
 }
 // REDIS DEPLOYMENT https://www.airplane.dev/blog/deploy-redis-cluster-on-kubernetes
+
+import nats from "node-nats-streaming";
+
+const sc = nats.connect("paginas", "asdga", { url: "http://nats-srv:4222" });
+
+// sc.on("connect", () => {
+//   // Simple Publisher (all publishes are async in the node version of the client)
+//   sc.publish("foo", "Hello node-nats-streaming!", (err, guid) => {
+//     if (err) {
+//       console.log("publish failed: " + err);
+//     } else {
+//       console.log("published message with guid: " + guid);
+//     }
+//   });
+
+//   // Subscriber can specify how many existing messages to get.
+//   const opts = sc.subscriptionOptions().setStartWithLastReceived();
+//   const subscription = sc.subscribe("foo", opts);
+//   subscription.on("message", (msg) => {
+//     console.log(
+//       "Received a message [" + msg.getSequence() + "] " + msg.getData()
+//     );
+//   });
+
+//   // After one second, unsubscribe, when that is done, close the connection
+//   setTimeout(() => {
+//     subscription.unsubscribe();
+//     subscription.on("unsubscribed", () => {
+//       sc.close();
+//     });
+//   }, 1000);
+// });
 
 export const currentUser = async (
   req: Request,
@@ -67,33 +99,39 @@ export const currentUser = async (
   //   req.currentUser = payload;
   // } catch (e) {}
 
-  // new AuthVerifyListener(natsWrapper.client, ({ jwt }) => {
-  //   const message = jwt;
+  new AuthVerifyListener(natsWrapper.client, (data) => {
+    const { type, msg } = data;
+    if (type === "error") {
+      return next();
+    }
+    const message = msg;
 
-  //   console.log("validated");
-  //   req.currentUser = { email: "payload", id: "asdf" };
-  //   try {
-  //     const payload = JSON.parse(message);
-  //     req.currentUser = payload;
+    console.log("validated");
+    // req.currentUser = { email: "payload", id: "asdf" };
+    try {
+      const payload = JSON.parse(message);
+      req.currentUser = payload;
 
-  //     next();
-  //   } catch (error) {
-  //     next();
+      next();
+    } catch (error) {
+      next();
+    }
+  }).listen();
+
+  // natsWrapper.client.publish(
+  //   Subjects.AuthVerify,
+  //   JSON.stringify({ jwt: req.session.jwt }),
+  //   (err, guid) => {
+  //     if (err) {
+  //       console.log("publish failed: " + err);
+  //     } else {
+  //       console.log("published message with guid: " + guid);
+  //     }
   //   }
-  // }).listen();
-  natsWrapper.client.addListener(Subjects.AuthVerify, (msg) =>
-    console.log("MESSAGE:", msg)
-  );
-  console.log("publishing");
-
+  // );
   const publisher = new AuthVerifyPublisher(natsWrapper.client);
-  console.log("publisher created");
+  await publisher.publish({ type: "request", msg: req.session.jwt });
 
-  natsWrapper.client.publish(
-    Subjects.AuthVerify,
-    JSON.stringify({ jwt: req.session.jwt })
-  );
-  // await publisher.publish({ jwt: req.session.jwt });
   console.log("published");
 
   // sendMessage(JSON.stringify({ jwt: req.session.jwt }));

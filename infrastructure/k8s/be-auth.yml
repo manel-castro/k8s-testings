@@ -16,6 +16,16 @@ spec:
         - name: be-auth
           # image: us.gcr.io/ticketing-dev-359710/be-auth
           image: manelcastro/be-auth
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: paginas
+
 ---
 apiVersion: v1
 kind: Service

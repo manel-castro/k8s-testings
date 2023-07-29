@@ -1,48 +1,39 @@
-import { verify } from "jsonwebtoken";
-import { redisClient } from "../..";
+import { Listener, Subjects, AuthVerifyEvent } from "@paginas/common";
+import { Message, Stan } from "node-nats-streaming";
+import { QUEUE_GROUP_NAME } from "./queueGroupName";
+import { AuthVerifyPublisher } from "../publishers/auth-verify-publisher";
+import { natsWrapper } from "../../nats-wrapper";
+import jwt from "jsonwebtoken";
 
-const authVerifyListener = async () => {
-  console.log("AUTHVERIFYLISTENER SUBSCRIBING");
+export class AuthVerifyListener extends Listener<AuthVerifyEvent> {
+  subject: Subjects.AuthVerify = Subjects.AuthVerify;
+  queueGroupName: string = QUEUE_GROUP_NAME;
 
-  const subscriber = redisClient.duplicate();
-  await subscriber.connect();
+  async onMessage(data: { type: string; msg: string }, mesg: Message) {
+    console.log("received msg:", data);
+    const publisher = new AuthVerifyPublisher(natsWrapper.client);
 
-  const publisher = redisClient.duplicate();
-  await publisher.connect();
+    const { type, msg } = data;
+    const token = msg;
 
-  await subscriber.subscribe("auth:verify:check", async (msg, channel) => {
-    console.log("msg: ", msg);
-    const { jwt } = JSON.parse(msg);
-
-    console.log("jwt: ", jwt);
-
-    if (!jwt) {
-      await publisher.publish(
-        "auth:verify:response",
-        JSON.stringify({ type: "error", msg: "no jwt token" })
-      );
-      return;
+    if (!token) {
+      return await publisher.publish({
+        type: "error",
+        msg: "Didn't received any JWT Token.",
+      });
     }
-    console.log("trying to publish1");
 
     try {
-      const payload = verify(jwt, process.env.JWT_KEY!);
-      console.log("trying to publish2");
-
-      await publisher.publish(
-        "auth:verify:response",
-        JSON.stringify({ type: "response", msg: payload })
-      );
-      console.log("PUBLISHED");
-      return;
+      const payload = jwt.verify(token, process.env.JWT_KEY!);
+      return await publisher.publish({
+        type: "response",
+        msg: JSON.stringify(payload),
+      });
     } catch (e) {
-      await publisher.publish(
-        "auth:verify:response",
-        JSON.stringify({ type: "error", msg: "jwt token invalid" })
-      );
-      return;
+      return await publisher.publish({
+        type: "error",
+        msg: e as any,
+      });
     }
-  });
-};
-
-export default authVerifyListener;
+  }
+}

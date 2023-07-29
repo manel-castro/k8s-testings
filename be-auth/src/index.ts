@@ -8,7 +8,8 @@ import { SigninRouter } from "./routes/signin";
 import { SignupRouter } from "./routes/signup";
 
 import * as redis from "redis";
-import authVerifyListener from "./events/listeners/auth-verify-listener";
+import { AuthVerifyListener } from "./events/listeners/auth-verify-listener";
+import { natsWrapper } from "./nats-wrapper";
 
 export const redisClient = redis.createClient({
   url: "redis://redis",
@@ -17,18 +18,34 @@ export const redisClient = redis.createClient({
 
 const start = async () => {
   /**
-   * RABBIT MQ
+   * Environment variables verification
+   */
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error("NATS_CLIENT_ID must be defined");
+  }
+  if (!process.env.NATS_URL) {
+    throw new Error("NATS_URL must be defined");
+  }
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error("NATS_CLUSTER_ID must be defined");
+  }
+  /**
+   * NATS
    */
   try {
-    redisClient.on("connect", () => {
-      console.log("Connected to redis");
-    });
-    redisClient.on("error", (err) => {
-      console.log("Error connecting to redis: ", err);
-    });
-    await redisClient.connect();
-
-    await authVerifyListener();
+    // redisClient.on("connect", () => {
+    //   console.log("Connected to redis");
+    // });
+    // redisClient.on("error", (err) => {
+    //   console.log("Error connecting to redis: ", err);
+    // });
+    // await redisClient.connect();
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+    );
+    new AuthVerifyListener(natsWrapper.client);
   } catch (e) {
     console.log(e);
   }
