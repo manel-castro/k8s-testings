@@ -6,6 +6,12 @@ import { errorHandler } from "./middlewares/error-handler";
 import { AuthRouter } from "./routes/auth/";
 import { PublicRouter } from "./routes/public";
 import { natsWrapper } from "./nats-wrapper";
+import * as redis from "redis";
+
+export const redisClient = redis.createClient({
+  url: "redis://redis",
+  password: "123456",
+});
 
 const start = async () => {
   /**
@@ -22,9 +28,16 @@ const start = async () => {
   }
 
   /**
-   * NATS
+   * Redis
    */
   try {
+    // redisClient.on("connect", () => {
+    //   console.log("Connected to redis");
+    // });
+    // redisClient.on("error", (err) => {
+    //   console.log("Error connecting to redis: ", err);
+    // });
+    // await redisClient.connect();
     await natsWrapper.connect(
       process.env.NATS_CLUSTER_ID,
       process.env.NATS_CLIENT_ID,

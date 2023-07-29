@@ -5,8 +5,10 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart:dev": "prisma migrate deploy && prisma db push",
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",
+    "prestart": "prisma migrate deploy",
     "start": "npm run build && node build/index.js"
   },
   "author": "",

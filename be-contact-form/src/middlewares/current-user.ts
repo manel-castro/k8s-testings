@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { AuthVerifyListener } from "../events/listeners/auth-verify-listener";
 import { natsWrapper } from "../nats-wrapper";
 import { AuthVerifyPublisher } from "../events/publishers/auth-verify-publisher";
+import { redisClient } from "..";
+import { Subjects } from "@paginas/common";
 
 interface UserPayload {
   id: string;
@@ -17,13 +19,7 @@ declare global {
     }
   }
 }
-
-import redis from "redis";
-export const publisher = redis.createClient({
-  url: "127.0.0.1",
-
-  no_ready_check: true,
-});
+// REDIS DEPLOYMENT https://www.airplane.dev/blog/deploy-redis-cluster-on-kubernetes
 
 export const currentUser = async (
   req: Request,
@@ -36,6 +32,32 @@ export const currentUser = async (
   if (!req.session?.jwt) {
     return next();
   }
+
+  // const subscriber = redisClient.duplicate();
+  // await subscriber.connect();
+  // console.log("Subscribed");
+
+  // subscriber.subscribe("auth:verify:response", (message) => {
+  //   console.log("message:", message);
+
+  //   const { type, msg } = JSON.parse(message);
+
+  //   if (type === "error") {
+  //     return next();
+  //   }
+
+  //   console.log("msg; ", msg);
+  //   req.currentUser = msg;
+  //   return next();
+  // });
+
+  // const publisher = redisClient.duplicate();
+  // await publisher.connect();
+  // await publisher.publish(
+  //   "auth:verify:check",
+  //   JSON.stringify({ jwt: req.session.jwt })
+  // );
+
   // next();
   // try {
   //   const payload = jwt.verify(
@@ -59,12 +81,19 @@ export const currentUser = async (
   //     next();
   //   }
   // }).listen();
-  // console.log("publishing");
+  natsWrapper.client.addListener(Subjects.AuthVerify, (msg) =>
+    console.log("MESSAGE:", msg)
+  );
+  console.log("publishing");
 
-  // const publisher = new AuthVerifyPublisher(natsWrapper.client);
-  // console.log("publisher created");
+  const publisher = new AuthVerifyPublisher(natsWrapper.client);
+  console.log("publisher created");
 
-  await publisher.publish({ jwt: req.session.jwt });
+  natsWrapper.client.publish(
+    Subjects.AuthVerify,
+    JSON.stringify({ jwt: req.session.jwt })
+  );
+  // await publisher.publish({ jwt: req.session.jwt });
   console.log("published");
 
   // sendMessage(JSON.stringify({ jwt: req.session.jwt }));

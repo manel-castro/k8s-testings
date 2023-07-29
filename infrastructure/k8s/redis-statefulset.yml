@@ -1,3 +1,4 @@
+# REDIS DEPLOYMENT: https://www.airplane.dev/blog/deploy-redis-cluster-on-kubernetes
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
