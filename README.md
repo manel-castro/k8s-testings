@@ -1,5 +1,9 @@
 DEPLOYMENT
 
+To start a k8s deployment: skaffold dev --wait-for-deletions=false
+
+If problems with images: skaffold dev --no-prune=false --cache-artifacts=false
+
 To start a development environment:
 
 - docker-compose -f docker-compose.dev.yml up --build -V
